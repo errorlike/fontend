@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 const PersonForm = ({ handleChangeName, handleChangeNumber, addPerson }) => {
   return (
     <form>
@@ -28,6 +27,7 @@ const Persons = ({ persons }) => {
     }))
   );
 };
+const Filter = ({ handleChangeSearchStr }) => (<div>filter shown with <input onChange={handleChangeSearchStr} /></div>);
 const App = () => {
   const [persons, setPersons] = useState([
     {
@@ -53,11 +53,15 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [searchStr, setSearchStrf] = useState('');
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
   const handleChangeNumber = (event) => {
     setNewNumber(event.target.value);
+  };
+  const handleChangeSearchStr = (event) => {
+    setSearchStrf(event.target.value);
   };
   const addPerson = (event) => {
     event.preventDefault();
@@ -82,18 +86,18 @@ const App = () => {
     }
     return false;
   };
+  const includesCaseInsensitive = (str, searchString) =>
+    new RegExp(searchString, 'i').test(str);
 
-
+  const personsToShow = searchStr === '' ? persons : persons.filter((person) => includesCaseInsensitive(person.name, searchStr));
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input />
-      </div>
+      <Filter handleChangeSearchStr={handleChangeSearchStr} />
       <h2>add a New</h2>
       <PersonForm handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={personsToShow} />
     </div>
   );
 };
