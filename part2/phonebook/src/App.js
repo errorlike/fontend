@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import personService from './server/persons';
 const PersonForm = ({ handleChangeName, handleChangeNumber, addPerson }) => {
   return (
     <form>
@@ -16,31 +16,34 @@ const PersonForm = ({ handleChangeName, handleChangeNumber, addPerson }) => {
 
 };
 
-const Person = ({ person }) => {
+const Person = ({ person, deletePerson }) => {
   return (
-    <p>{person.name} {person.number}</p>
+    <p>{person.name} {person.number} <button onClick={deletePerson}>delete</button></p>
   );
 };
-const Persons = ({ persons }) => {
+const Persons = ({ persons, changePersonsState }) => {
   return (
     persons.map((person => {
-      return <Person key={person.id} person={person} />;
+      return <Person key={person.id} person={person} deletePerson={() => {
+        if (window.confirm(`Delete ${person.name} ?`)) {
+          personService.deleteById(person.id);
+          changePersonsState(persons.filter(p => p.id !== person.id));
+        }
+      }} />;
     }))
   );
 };
 const Filter = ({ handleChangeSearchStr }) => (<div>filter shown with <input onChange={handleChangeSearchStr} /></div>);
 const App = () => {
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(respose => {
-        console.log("resolve");
-        setPersons(respose.data);
+    personService
+      .getAll()
+      .then(intialPersons => {
+        setPersons(intialPersons);
       });
   }, []);
   const [persons, setPersons] = useState([
   ]);
-  console.log('render', persons.length);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchStr, setSearchStrf] = useState('');
@@ -62,10 +65,14 @@ const App = () => {
         id: persons.length + 1,
       };
 
-      setPersons(persons.concat(personObject));
+      personService
+        .create(personObject)
+        .then(responsedPerson => {
+          setPersons(persons.concat(responsedPerson));
+          setNewName("");
+          setNewNumber("");
+        });
     };
-    setNewName("");
-    setNewNumber("");
   };
   const checkRepeatName = (persons, name) => {
     const nameArray = persons.map((person) => person.name);
@@ -78,7 +85,9 @@ const App = () => {
   };
   const includesCaseInsensitive = (str, searchString) =>
     new RegExp(searchString, 'i').test(str);
-
+  const changePersonsState = (persons) => {
+    setPersons(persons);
+  };
   const personsToShow = searchStr === '' ? persons : persons.filter((person) => includesCaseInsensitive(person.name, searchStr));
   return (
     <div>
@@ -87,7 +96,7 @@ const App = () => {
       <h2>add a New</h2>
       <PersonForm handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} changePersonsState={changePersonsState} />
     </div>
   );
 };
