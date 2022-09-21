@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
 import personService from './server/persons';
+const Notification = ({ sucessMessage }) => {
+  if (sucessMessage === null) {
+    return null;
+  }
+  return (
+    <div className='sucess'>
+      {sucessMessage}
+    </div>
+  );
+};
 const PersonForm = ({ handleChangeName, handleChangeNumber, addPerson }) => {
   return (
     <form>
@@ -47,6 +57,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchStr, setSearchStrf] = useState('');
+  const [sucessMessage, setSucessMessage] = useState(null);
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
@@ -64,11 +75,14 @@ const App = () => {
         number: newNumber,
         id: persons.length + 1,
       };
-
       personService
         .create(personObject)
         .then(responsedPerson => {
           setPersons(persons.concat(responsedPerson));
+          setSucessMessage(`Added ${responsedPerson.name} `);
+          setTimeout(() => {
+            setSucessMessage(null);
+          }, 3000);
           setNewName("");
           setNewNumber("");
         });
@@ -92,6 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification sucessMessage={sucessMessage} />
       <Filter handleChangeSearchStr={handleChangeSearchStr} />
       <h2>add a New</h2>
       <PersonForm handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
