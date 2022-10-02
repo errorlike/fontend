@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import personService from './server/persons';
-const Notification = ({ sucessMessage }) => {
-  if (sucessMessage === null) {
+const Notification = ({ successMessage }) => {
+  if (successMessage === null) {
     return null;
   }
   return (
-    <div className='sucess'>
-      {sucessMessage}
+    <div className='success'>
+      {successMessage}
     </div>
   );
 };
@@ -48,16 +48,16 @@ const App = () => {
   useEffect(() => {
     personService
       .getAll()
-      .then(intialPersons => {
-        setPersons(intialPersons);
+      .then(initialPersons => {
+        setPersons(initialPersons);
       });
   }, []);
   const [persons, setPersons] = useState([
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [searchStr, setSearchStrf] = useState('');
-  const [sucessMessage, setSucessMessage] = useState(null);
+  const [searchStr, setSearchStr] = useState('');
+  const [successMessage, setSuccessMessage] = useState(null);
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
@@ -65,7 +65,7 @@ const App = () => {
     setNewNumber(event.target.value);
   };
   const handleChangeSearchStr = (event) => {
-    setSearchStrf(event.target.value);
+    setSearchStr(event.target.value);
   };
   const addPerson = (event) => {
     event.preventDefault();
@@ -79,9 +79,9 @@ const App = () => {
         .create(personObject)
         .then(responsedPerson => {
           setPersons(persons.concat(responsedPerson));
-          setSucessMessage(`Added ${responsedPerson.name} `);
+          setSuccessMessage(`Added ${responsedPerson.name} `);
           setTimeout(() => {
-            setSucessMessage(null);
+            setSuccessMessage(null);
           }, 3000);
           setNewName("");
           setNewNumber("");
@@ -106,7 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification sucessMessage={sucessMessage} />
+      <Notification successMessage={successMessage} />
       <Filter handleChangeSearchStr={handleChangeSearchStr} />
       <h2>add a New</h2>
       <PersonForm handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
