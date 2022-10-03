@@ -10,6 +10,16 @@ const Notification = ({ successMessage }) => {
     </div>
   );
 };
+const ErrorMessage = ({ errorMessage }) => {
+  if (errorMessage === null) {
+    return null;
+  }
+  return (
+    <div className='error'>
+      {errorMessage}
+    </div>
+  );
+};
 const PersonForm = ({ handleChangeName, handleChangeNumber, addPerson }) => {
   return (
     <form>
@@ -58,6 +68,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchStr, setSearchStr] = useState('');
   const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
@@ -73,7 +84,6 @@ const App = () => {
       const personObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
       personService
         .create(personObject)
@@ -85,6 +95,12 @@ const App = () => {
           }, 3000);
           setNewName("");
           setNewNumber("");
+        }).catch(error => {
+          setErrorMessage(error.response.data.error);
+          setTimeout(() => {
+            setErrorMessage(null);
+          },3000);
+
         });
     };
   };
@@ -107,6 +123,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification successMessage={successMessage} />
+      <ErrorMessage errorMessage={errorMessage} />
       <Filter handleChangeSearchStr={handleChangeSearchStr} />
       <h2>add a New</h2>
       <PersonForm handleChangeName={handleChangeName} handleChangeNumber={handleChangeNumber} addPerson={addPerson} />
