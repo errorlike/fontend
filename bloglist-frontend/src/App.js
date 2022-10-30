@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
@@ -15,6 +15,7 @@ const App = () => {
   const [loginMessage, setLoginMessage] = useState('');
   const [blogMessage, setBlogMessage] = useState(null);
   const [notificationType, setNotificationType] = useState('');
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -28,6 +29,7 @@ const App = () => {
       setUser(user);
     }
   }, []);
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -45,6 +47,7 @@ const App = () => {
       }, 5000);
     };
   };
+
   const handleUsernameChange = ({ target }) => setUsername(target.value);
   const handlePasswordChange = ({ target }) => setPassword(target.value);
 
@@ -52,7 +55,6 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(returnedBlog));
-
     } catch (exception) {
       setBlogMessage('create blog failed');
       setNotificationType('error');
@@ -62,6 +64,20 @@ const App = () => {
       }, 5000);
     }
   };
+  const incrLikeCount = async (willUpdateBlog) => {
+    try {
+      const updatedBlog = await blogService.update(willUpdateBlog.id, { ...willUpdateBlog, likes: willUpdateBlog.likes + 1 });
+      setBlogs(blogs.map(blog => blog.id !== willUpdateBlog.id ? blog : updatedBlog));
+    } catch (error) {
+      setBlogMessage('update liking count failed');
+      setNotificationType('error');
+      setTimeout(() => {
+        setBlogMessage(null);
+      }, 5000);
+    }
+
+  };
+
   const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
     setUser(null);
@@ -73,7 +89,12 @@ const App = () => {
         ? <div>
           <h2>Log in to application</h2>
           <Notification message={loginMessage} type={notificationType} />
-          <LoginForm username={username} password={password} handleLogin={handleLogin} handleUsernameChange={handleUsernameChange} handlePasswordChange={handlePasswordChange} />
+          <LoginForm
+            username={username}
+            password={password}
+            handleLogin={handleLogin}
+            handleUsernameChange={handleUsernameChange}
+            handlePasswordChange={handlePasswordChange} />
         </div>
         : <div>
           <h2>blogs</h2>
@@ -86,7 +107,9 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <div>
+              <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} />
+            </div>
           )}
         </div>
       }
