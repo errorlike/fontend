@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
@@ -15,6 +15,8 @@ const App = () => {
   const [loginMessage, setLoginMessage] = useState('');
   const [blogMessage, setBlogMessage] = useState(null);
   const [notificationType, setNotificationType] = useState('');
+
+  const ref = useRef();
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -53,6 +55,7 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
+      ref.current.toggleVisibility();
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(returnedBlog));
     } catch (exception) {
@@ -101,18 +104,18 @@ const App = () => {
           <Notification message={blogMessage} type={notificationType} />
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
           <h2>create new</h2>
-          <Togglable buttonLabel={'new blog'}>
+          <Togglable buttonLabel={'new blog'} ref={ref}>
             <BlogForm
               createBlog={addBlog}
             />
           </Togglable>
           {blogs.sort((a, b) => a.likes - b.likes).reverse().map(blog =>
-              <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} />
+            <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} />
           )}
         </div>
       }
 
-    </div>
+    </div >
   );
 };
 export default App;
