@@ -23,6 +23,7 @@ const App = () => {
       setBlogs(blogs)
     );
   }, []);
+
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem('loggedBlogappUser');
     if (loggedUserJson) {
@@ -31,7 +32,6 @@ const App = () => {
       setUser(user);
     }
   }, []);
-
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -81,6 +81,22 @@ const App = () => {
 
   };
 
+  const removeBlog = async (willRemoveBlog) => {
+      const result = window.confirm('Remove blog?');
+      try {
+        if (result) {
+          await blogService.deleteBlog(willRemoveBlog);
+          setBlogs(blogs.filter(blog => blog.id !== willRemoveBlog.id));
+        }
+      } catch (exception) {
+        setBlogMessage('delete blog failed');
+        setNotificationType('error');
+        setTimeout(() => {
+          setBlogMessage(null);
+          setNotificationType('');
+        }, 5000);
+      }
+  };
   const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
     setUser(null);
@@ -109,8 +125,8 @@ const App = () => {
               createBlog={addBlog}
             />
           </Togglable>
-          {blogs.sort((a, b) => a.likes - b.likes).reverse().map(blog =>
-            <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} />
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+            <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} removeBlog={removeBlog} username={user.username} />
           )}
         </div>
       }

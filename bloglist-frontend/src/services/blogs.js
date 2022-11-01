@@ -21,10 +21,14 @@ const update = async (id, newObject) => {
   const response = await axios.put(`${baseUrl}/${id}`, newObject);
   return response.data;
 };
+const deleteBlog = async (id) => {
+  await axios.delete(`${baseUrl}/${id}`);
+};
 const blogsService = {
   getAll,
   create,
   update,
+  deleteBlog,
   setToken
 };
 export default blogsService;
