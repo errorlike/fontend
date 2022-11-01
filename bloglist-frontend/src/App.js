@@ -103,13 +103,11 @@ const App = () => {
           <h2>create new</h2>
           <Togglable buttonLabel={'new blog'}>
             <BlogForm
-              createNote={addBlog}
+              createBlog={addBlog}
             />
           </Togglable>
-          {blogs.map(blog =>
-            <div>
+          {blogs.sort((a, b) => a.likes - b.likes).reverse().map(blog =>
               <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} />
-            </div>
           )}
         </div>
       }
