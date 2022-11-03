@@ -47,7 +47,7 @@ const App = () => {
         setLoginMessage(null);
         setNotificationType('');
       }, 5000);
-    };
+    }
   };
 
   const handleUsernameChange = ({ target }) => setUsername(target.value);
@@ -82,20 +82,20 @@ const App = () => {
   };
 
   const removeBlog = async (willRemoveBlog) => {
-      const result = window.confirm('Remove blog?');
-      try {
-        if (result) {
-          await blogService.deleteBlog(willRemoveBlog);
-          setBlogs(blogs.filter(blog => blog.id !== willRemoveBlog.id));
-        }
-      } catch (exception) {
-        setBlogMessage('delete blog failed');
-        setNotificationType('error');
-        setTimeout(() => {
-          setBlogMessage(null);
-          setNotificationType('');
-        }, 5000);
+    const result = window.confirm('Remove blog?');
+    try {
+      if (result) {
+        await blogService.deleteBlog(willRemoveBlog);
+        setBlogs(blogs.filter(blog => blog.id !== willRemoveBlog.id));
       }
+    } catch (exception) {
+      setBlogMessage('delete blog failed');
+      setNotificationType('error');
+      setTimeout(() => {
+        setBlogMessage(null);
+        setNotificationType('');
+      }, 5000);
+    }
   };
   const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
