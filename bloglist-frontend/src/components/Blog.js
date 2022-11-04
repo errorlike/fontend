@@ -23,7 +23,7 @@ const Blog = ({ blog, incrLikeCount, removeBlog, username }) => {
   return (
     <div style={blogStyle} data-testid = 'short'>
       <div style={hideWhenVisible}>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
+        {blog.title} {blog.author} <button data-testid='viewButton' onClick={toggleVisibility}>view</button>
       </div>
       <div style={showWhenVisible} data-testid='verbose'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
