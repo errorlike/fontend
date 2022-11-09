@@ -4,10 +4,12 @@ import { Provider } from 'react-redux';
 import App from './App';
 import anecdoteReducer from './reducers/anecdoteReducer';
 import { configureStore } from '@reduxjs/toolkit';
+import messageReducer from './reducers/messageReducer';
 
 const store = configureStore({
   reducer: {
-    anecdotes: anecdoteReducer
+    anecdotes: anecdoteReducer,
+    message: messageReducer
   }
 });
 
