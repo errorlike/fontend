@@ -4,6 +4,9 @@ const Notification = ({ message }) => {
     padding: 10,
     borderWidth: 1
   };
+  if (message === null) {
+    return null;
+  }
   return (
     <div style={style}>
       {message}
