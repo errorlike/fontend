@@ -8,10 +8,16 @@ const messageSlice = createSlice({
     setMessage(state, action) {
       return action.payload;
     },
-    cancleMessage() {
-      return initialState;
-    }
   }
 });
-export const { setMessage, cancleMessage } = messageSlice.actions;
+export const { setMessage } = messageSlice.actions;
+export const setNotification = (message, time) => {
+  return dispatch => {
+    dispatch(setMessage(message));
+    setTimeout(() => {
+      dispatch(setMessage(null));
+    }, time * 1000);
+  };
+
+};
 export default messageSlice.reducer;
