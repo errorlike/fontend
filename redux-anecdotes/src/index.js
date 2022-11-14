@@ -5,11 +5,13 @@ import { Provider } from 'react-redux';
 import App from './App';
 import anecdoteReducer from './reducers/anecdoteReducer';
 import messageReducer from './reducers/messageReducer';
+import timeIdReducer from './reducers/timeIdReducer';
 
 const store = configureStore({
   reducer: {
     anecdotes: anecdoteReducer,
-    message: messageReducer
+    message: messageReducer,
+    timeId: timeIdReducer
   }
 });
 

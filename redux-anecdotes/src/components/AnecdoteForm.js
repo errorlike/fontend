@@ -3,8 +3,6 @@ import { addAnecdote } from "../reducers/anecdoteReducer";
 import { setNotification } from "../reducers/messageReducer";
 
 const AnecdoteForm = (props) => {
-  console.log(addAnecdote);
-  console.log(props.addAnecdote);
   const addNote = async (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
