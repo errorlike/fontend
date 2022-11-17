@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Link, Route, Routes, useMatch } from 'react-router-dom';
+import { Link, Route, Routes, useMatch, useNavigate } from 'react-router-dom';
 
-const Menu = () => {
+const Menu = ({ notification }) => {
   const padding = {
     paddingRight: 5
   };
+  console.log(notification)
   return (
     <div>
       <Link style={padding} to="/anecdotes">anecdotes</Link>
       <Link style={padding} to='/create'>create new</Link>
       <Link style={padding} to='/about'>about</Link>
+      {notification ? <div>{notification}</div> : null}
     </div>
   );
 };
@@ -54,7 +56,6 @@ const Footer = () => (
     See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
   </div>
 );
-
 const CreateNew = (props) => {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
@@ -111,12 +112,17 @@ const App = () => {
       id: 2
     }
   ]);
-
+  const navigate = useNavigate();
   const [notification, setNotification] = useState('');
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
+    navigate('/');
+    setNotification(`a new anecdote ${anecdote.content} created`);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   const anecdoteById = (id) =>
@@ -140,10 +146,10 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu />
+      <Menu notification={notification}/>
       <Routes>
-        <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} />} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
         <Route path='/about' element={<About />} />
