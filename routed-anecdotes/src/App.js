@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link, Route, Routes, useMatch, useNavigate } from 'react-router-dom';
-
+import { useField } from './hooks';
 const Menu = ({ notification }) => {
   const padding = {
     paddingRight: 5
   };
-  console.log(notification)
   return (
     <div>
       <Link style={padding} to="/anecdotes">anecdotes</Link>
@@ -57,17 +56,16 @@ const Footer = () => (
   </div>
 );
 const CreateNew = (props) => {
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [info, setInfo] = useState('');
-
+  const content = useField('text');
+  const author = useField('text');
+  const info = useField('text');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content:content.value,
+      author:author.value,
+      info:info.value,
       votes: 0
     });
   };
@@ -77,16 +75,16 @@ const CreateNew = (props) => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+        content
+          <input name='content' {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input name='info' {...info} />
         </div>
         <button>create</button>
       </form>
@@ -139,14 +137,13 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a));
   };
   const match = useMatch('/anecdotes/:id');
-  console.log(match?.params);
   const anecdote = match
     ? anecdotes.find(anecdote => anecdote.id === +match.params.id)
     : null;
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu notification={notification}/>
+      <Menu notification={notification} />
       <Routes>
         <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
