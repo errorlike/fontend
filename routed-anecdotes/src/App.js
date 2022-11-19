@@ -60,12 +60,17 @@ const CreateNew = (props) => {
   const author = useField('text');
   const info = useField('text');
 
+  const removeProp = 'reset';
+  const { [removeProp]: removeContent, ...contentAttr } = content;
+  const { [removeProp]: removeAuthor, ...authorAttr } = author;
+  const { [removeProp]: removeInfo, ...infoAttr } = info;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content:content.value,
-      author:author.value,
-      info:info.value,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     });
   };
@@ -75,18 +80,23 @@ const CreateNew = (props) => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-        content
-          <input name='content' {...content} />
+          content
+          <input name='content' {...contentAttr} />
         </div>
         <div>
           author
-          <input name='author' {...author} />
+          <input name='author' {...authorAttr} />
         </div>
         <div>
           url for more info
-          <input name='info' {...info} />
+          <input name='info' {...infoAttr} />
         </div>
         <button>create</button>
+        <button type='button' onClick={() => {
+          content.reset();
+          author.reset();
+          info.reset();
+        }}>reset</button>
       </form>
     </div>
   );
