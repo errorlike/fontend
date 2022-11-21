@@ -23,7 +23,7 @@ const useResource = (baseUrl) => {
       setResources(response.data);
     };
     getAll();
-  }, []);
+  }, [baseUrl]);
 
 
   const create = async (resource) => {
