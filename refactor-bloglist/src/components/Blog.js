@@ -17,11 +17,11 @@ const Blog = ({ blog, incrLikeCount, removeBlog, username }) => {
     setVisible(!visible);
   };
   const remove = () =>
-    <button onClick={() => { removeBlog(blog); }}>
+    <button onClick={() => { removeBlog(blog.id); }}>
       remove
     </button>;
   return (
-    <div style={blogStyle} data-testid = 'short'>
+    <div style={blogStyle} data-testid='short'>
       <div style={hideWhenVisible}>
         {blog.title} {blog.author} <button data-testid='viewButton' onClick={toggleVisibility}>view</button>
       </div>

@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import { createNew, deleteBlog, initialBlog, updateBlog } from './reducers/blogReducer';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -17,11 +18,11 @@ const App = () => {
   const [notificationType, setNotificationType] = useState('');
 
   const ref = useRef();
-
+  const dispatch = useDispatch();
+  const blogs = useSelector(state => state.blogs);
+  const blogsCopy = [...blogs];
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    );
+    dispatch(initialBlog());
   }, []);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const App = () => {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
       setUser(user);
+      blogService.setToken(user.token);
       setUsername('');
       setPassword('');
     } catch (exception) {
@@ -56,8 +58,7 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       ref.current.toggleVisibility();
-      const returnedBlog = await blogService.create(blogObject);
-      setBlogs(blogs.concat(returnedBlog));
+      dispatch(createNew(blogObject));
     } catch (exception) {
       setBlogMessage('create blog failed');
       setNotificationType('error');
@@ -69,8 +70,7 @@ const App = () => {
   };
   const incrLikeCount = async (willUpdateBlog) => {
     try {
-      const updatedBlog = await blogService.update(willUpdateBlog.id, { ...willUpdateBlog, likes: willUpdateBlog.likes + 1 });
-      setBlogs(blogs.map(blog => blog.id !== willUpdateBlog.id ? blog : updatedBlog));
+      dispatch(updateBlog({ ...willUpdateBlog, likes: willUpdateBlog.likes + 1 }));
     } catch (error) {
       setBlogMessage('update liking count failed');
       setNotificationType('error');
@@ -81,12 +81,11 @@ const App = () => {
 
   };
 
-  const removeBlog = async (willRemoveBlog) => {
+  const removeBlog = async (id) => {
     const result = window.confirm('Remove blog?');
     try {
       if (result) {
-        await blogService.deleteBlog(willRemoveBlog);
-        setBlogs(blogs.filter(blog => blog.id !== willRemoveBlog.id));
+        dispatch(deleteBlog(id));
       }
     } catch (exception) {
       setBlogMessage('delete blog failed');
@@ -125,7 +124,7 @@ const App = () => {
               createBlog={addBlog}
             />
           </Togglable>
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+          {blogsCopy.sort((a, b) => b.likes - a.likes).map(blog =>
             <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} removeBlog={removeBlog} username={user.username} />
           )}
         </div>
