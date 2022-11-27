@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import { createNew, deleteBlog, initialBlog, updateBlog } from './reducers/blogReducer';
+import { setMessage, setNotification } from './reducers/messageReducer';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -13,13 +14,11 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [loginMessage, setLoginMessage] = useState('');
-  const [blogMessage, setBlogMessage] = useState(null);
-  const [notificationType, setNotificationType] = useState('');
 
   const ref = useRef();
   const dispatch = useDispatch();
   const blogs = useSelector(state => state.blogs);
+  const message = useSelector(state => state.message);
   const blogsCopy = [...blogs];
   useEffect(() => {
     dispatch(initialBlog());
@@ -43,12 +42,7 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      setLoginMessage('Wrong username or password');
-      setNotificationType('error');
-      setTimeout(() => {
-        setLoginMessage(null);
-        setNotificationType('');
-      }, 5000);
+      dispatch(setNotification({ content: 'Wrong username or password', type: 'error' }, 5));
     }
   };
 
@@ -60,22 +54,15 @@ const App = () => {
       ref.current.toggleVisibility();
       dispatch(createNew(blogObject));
     } catch (exception) {
-      setBlogMessage('create blog failed');
-      setNotificationType('error');
-      setTimeout(() => {
-        setBlogMessage(null);
-        setNotificationType('');
-      }, 5000);
+      dispatch(setNotification({ content: 'create blog failed', type: 'error' }, 5));
     }
   };
   const incrLikeCount = async (willUpdateBlog) => {
     try {
       dispatch(updateBlog({ ...willUpdateBlog, likes: willUpdateBlog.likes + 1 }));
     } catch (error) {
-      setBlogMessage('update liking count failed');
-      setNotificationType('error');
+      dispatch(setNotification({ content: 'update liking count failed', type: 'error' }, 5));
       setTimeout(() => {
-        setBlogMessage(null);
       }, 5000);
     }
 
@@ -88,12 +75,7 @@ const App = () => {
         dispatch(deleteBlog(id));
       }
     } catch (exception) {
-      setBlogMessage('delete blog failed');
-      setNotificationType('error');
-      setTimeout(() => {
-        setBlogMessage(null);
-        setNotificationType('');
-      }, 5000);
+      dispatch(setMessage('delete blog failed', 5));
     }
   };
   const logout = () => {
@@ -106,7 +88,7 @@ const App = () => {
       {user === null
         ? <div>
           <h2>Log in to application</h2>
-          <Notification message={loginMessage} type={notificationType} />
+          <Notification message={message ? message.content : message} type={message ? message.type : message} />
           <LoginForm
             username={username}
             password={password}
@@ -116,7 +98,7 @@ const App = () => {
         </div>
         : <div>
           <h2>blogs</h2>
-          <Notification message={blogMessage} type={notificationType} />
+          <Notification message={message ? message.content : message} type={message ? message.type : message} />
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
           <h2>create new</h2>
           <Togglable buttonLabel={'new blog'} ref={ref}>

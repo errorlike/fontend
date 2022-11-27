@@ -5,10 +5,12 @@ import { Provider } from 'react-redux';
 import App from './App';
 import './index.css';
 import blogReducer from './reducers/blogReducer';
+import messageReducer from './reducers/messageReducer';
 
 const store = configureStore({
   reducer: {
     blogs: blogReducer,
+    message:messageReducer
   }
 });
 
