@@ -7,18 +7,20 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import { createNew, deleteBlog, initialBlog, updateBlog } from './reducers/blogReducer';
 import { setMessage, setNotification } from './reducers/messageReducer';
+import { setUser } from './reducers/userReducer';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
   const ref = useRef();
   const dispatch = useDispatch();
   const blogs = useSelector(state => state.blogs);
   const message = useSelector(state => state.message);
+  const user = useSelector(state => state.user);
   const blogsCopy = [...blogs];
   useEffect(() => {
     dispatch(initialBlog());
@@ -29,7 +31,7 @@ const App = () => {
     if (loggedUserJson) {
       const user = JSON.parse(loggedUserJson);
       blogService.setToken(user.token);
-      setUser(user);
+      dispatch(setUser(user));
     }
   }, []);
   const handleLogin = async (event) => {
@@ -37,7 +39,7 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
-      setUser(user);
+      dispatch(setUser(user));
       blogService.setToken(user.token);
       setUsername('');
       setPassword('');
@@ -62,8 +64,6 @@ const App = () => {
       dispatch(updateBlog({ ...willUpdateBlog, likes: willUpdateBlog.likes + 1 }));
     } catch (error) {
       dispatch(setNotification({ content: 'update liking count failed', type: 'error' }, 5));
-      setTimeout(() => {
-      }, 5000);
     }
 
   };
@@ -80,7 +80,7 @@ const App = () => {
   };
   const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
-    setUser(null);
+    dispatch(setUser(null));
   };
 
   return (

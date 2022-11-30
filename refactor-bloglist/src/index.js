@@ -6,11 +6,13 @@ import App from './App';
 import './index.css';
 import blogReducer from './reducers/blogReducer';
 import messageReducer from './reducers/messageReducer';
+import userReducer from './reducers/userReducer';
 
 const store = configureStore({
   reducer: {
     blogs: blogReducer,
-    message:messageReducer
+    message: messageReducer,
+    user: userReducer
   }
 });
 
