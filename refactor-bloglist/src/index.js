@@ -7,12 +7,14 @@ import './index.css';
 import blogReducer from './reducers/blogReducer';
 import messageReducer from './reducers/messageReducer';
 import userReducer from './reducers/userReducer';
+import usersReducer from './reducers/usersReducer';
 
 const store = configureStore({
   reducer: {
     blogs: blogReducer,
     message: messageReducer,
-    user: userReducer
+    user: userReducer,
+    users: usersReducer
   }
 });
 

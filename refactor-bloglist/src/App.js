@@ -5,9 +5,11 @@ import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import Users from './components/Users';
 import { createNew, deleteBlog, initialBlog, updateBlog } from './reducers/blogReducer';
 import { setMessage, setNotification } from './reducers/messageReducer';
 import { setUser } from './reducers/userReducer';
+import { initialUsers } from './reducers/usersReducer';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -33,6 +35,9 @@ const App = () => {
       blogService.setToken(user.token);
       dispatch(setUser(user));
     }
+  }, []);
+  useEffect(() => {
+    dispatch(initialUsers());
   }, []);
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -100,7 +105,6 @@ const App = () => {
           <h2>blogs</h2>
           <Notification message={message ? message.content : message} type={message ? message.type : message} />
           <p>{user.name} logged in <button onClick={logout}>logout</button></p>
-          <h2>create new</h2>
           <Togglable buttonLabel={'new blog'} ref={ref}>
             <BlogForm
               createBlog={addBlog}
@@ -109,9 +113,12 @@ const App = () => {
           {blogsCopy.sort((a, b) => b.likes - a.likes).map(blog =>
             <Blog key={blog.id} blog={blog} incrLikeCount={incrLikeCount} removeBlog={removeBlog} username={user.username} />
           )}
+          <div>
+            <h2>Users</h2>
+            <Users />
+          </div>
         </div>
       }
-
     </div >
   );
 };
