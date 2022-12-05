@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import UserDetails from './components/UserDetails';
 import Users from './components/Users';
 import { createNew, deleteBlog, initialBlog, updateBlog } from './reducers/blogReducer';
 import { setMessage, setNotification } from './reducers/messageReducer';
@@ -16,7 +18,6 @@ import loginService from './services/login';
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  // const [user, setUser] = useState(null);
 
   const ref = useRef();
   const dispatch = useDispatch();
@@ -119,6 +120,9 @@ const App = () => {
           </div>
         </div>
       }
+      <Routes>
+        <Route path='users/:id' element={<UserDetails />}></Route>
+      </Routes>
     </div >
   );
 };
