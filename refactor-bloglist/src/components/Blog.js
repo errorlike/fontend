@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const Blog = ({ blog, incrLikeCount, removeBlog, username }) => {
-  const [visible, setVisible] = useState(false);
+const Blog = ({ blog, removeBlog, username }) => {
+  // const [visible, setVisible] = useState(false);
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -9,31 +9,23 @@ const Blog = ({ blog, incrLikeCount, removeBlog, username }) => {
     borderWidth: 1,
     marginBottom: 5
   };
-  const hideWhenVisible = { display: visible ? 'none' : null };
-  const showWhenVisible = { display: visible ? null : 'none' };
+  // const hideWhenVisible = { display: visible ? 'none' : null };
+  // const showWhenVisible = { display: visible ? null : 'none' };
 
 
-  const toggleVisibility = () => {
-    setVisible(!visible);
-  };
+  // const toggleVisibility = () => {
+  //   setVisible(!visible);
+  // };
   const remove = () =>
     <button onClick={() => { removeBlog(blog.id); }}>
       remove
     </button>;
   return (
-    <div style={blogStyle} data-testid='short'>
-      <div style={hideWhenVisible}>
-        {blog.title} {blog.author} <button data-testid='viewButton' onClick={toggleVisibility}>view</button>
+    <div style={blogStyle} >
+      <div>
+        <Link to={`blogs/${blog.id}`}>{blog.title} {blog.author}</Link> {/* <button data-testid='viewButton' onClick={toggleVisibility}>view</button> */}
       </div>
-      <div style={showWhenVisible} data-testid='verbose'>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button>
-        <br />
-        {blog.url}
-        <br />
-        {blog.likes} <button onClick={() => { incrLikeCount(blog); }}>like</button>
-        <br />
-        {blog.author}
-      </div>
+
       {username === blog.user.username ? remove() : null}
     </div>
 
