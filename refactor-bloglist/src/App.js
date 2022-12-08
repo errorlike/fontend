@@ -6,6 +6,7 @@ import BlogDetail from './components/BlogDetail';
 import Blogs from './components/Blogs';
 import Home from './components/Home';
 import Login from './components/Login';
+import Menu from './components/Menu';
 import UserDetails from './components/UserDetails';
 import Users from './components/Users';
 import { initialBlog } from './reducers/blogReducer';
@@ -34,16 +35,13 @@ const App = () => {
     dispatch(initialUsers());
   }, []);
 
-  const logout = () => {
-    window.localStorage.removeItem('loggedBlogappUser');
-    dispatch(setUser(null));
-  };
+
   return (
     <div>
       {user ?
         <>
+          <Menu user={user}/>
           <h2>blogs</h2>
-          <p>{user.name} logged in <button onClick={logout}>logout</button></p>
         </>
         : null}
       <Routes>

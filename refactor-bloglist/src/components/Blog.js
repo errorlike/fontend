@@ -9,13 +9,6 @@ const Blog = ({ blog, removeBlog, username }) => {
     borderWidth: 1,
     marginBottom: 5
   };
-  // const hideWhenVisible = { display: visible ? 'none' : null };
-  // const showWhenVisible = { display: visible ? null : 'none' };
-
-
-  // const toggleVisibility = () => {
-  //   setVisible(!visible);
-  // };
   const remove = () =>
     <button onClick={() => { removeBlog(blog.id); }}>
       remove
