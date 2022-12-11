@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { updateBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/messageReducer';
+import CommentForm from './CommentForm';
 
 const BlogDetail = () => {
   const id = useParams().id;
@@ -26,6 +27,13 @@ const BlogDetail = () => {
       {blog.likes} <button onClick={() => { incrLikeCount(blog); }}>like</button>
       <br />
       {blog.author}
+      <h2>comments</h2>
+      {blog.comments ?
+        <ul>
+          {blog.comments.map(comment => <li key={comment.id}>{comment.content}</li>)}
+        </ul>
+        : null}
+      <CommentForm id={blog.id} />
     </div>
   );
 };

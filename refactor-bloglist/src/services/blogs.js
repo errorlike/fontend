@@ -24,11 +24,24 @@ const update = async (id, newObject) => {
 const deleteBlog = async (id) => {
   await axios.delete(`${baseUrl}/${id}`);
 };
+const getAllComment = async (id) => {
+  const request = axios.get(`${baseUrl}/${id}/comments`);
+  const response = await request;
+  return response.data;
+};
+
+const createComment = async (blogId, comment) => {
+  const request = axios.post(`${baseUrl}/${blogId}/comments`, comment);
+  const response = await request;
+  return response.data;
+};
 const blogsService = {
   getAll,
   create,
   update,
   deleteBlog,
-  setToken
+  setToken,
+  getAllComment,
+  createComment
 };
 export default blogsService;

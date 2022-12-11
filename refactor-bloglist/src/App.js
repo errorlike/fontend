@@ -41,7 +41,7 @@ const App = () => {
       {user ?
         <>
           <Menu user={user}/>
-          <h2>blogs</h2>
+          <h2>blogApp</h2>
         </>
         : null}
       <Routes>

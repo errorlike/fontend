@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 const Blog = ({ blog, removeBlog, username }) => {
-  // const [visible, setVisible] = useState(false);
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,7 +15,7 @@ const Blog = ({ blog, removeBlog, username }) => {
   return (
     <div style={blogStyle} >
       <div>
-        <Link to={`blogs/${blog.id}`}>{blog.title} {blog.author}</Link> {/* <button data-testid='viewButton' onClick={toggleVisibility}>view</button> */}
+        <Link to={`blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
       </div>
 
       {username === blog.user.username ? remove() : null}
