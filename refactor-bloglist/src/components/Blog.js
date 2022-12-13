@@ -1,3 +1,4 @@
+import { Button, Link as MuiLink } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Blog = ({ blog, removeBlog, username }) => {
@@ -9,13 +10,16 @@ const Blog = ({ blog, removeBlog, username }) => {
     marginBottom: 5
   };
   const remove = () =>
-    <button onClick={() => { removeBlog(blog.id); }}>
+    <Button variant='outlined' size='small' onClick={() => { removeBlog(blog.id); }}>
       remove
-    </button>;
+    </Button >;
   return (
     <div style={blogStyle} >
       <div>
-        <Link to={`blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+        <MuiLink variant= 'body1' component={Link} to={`/blogs/${blog.id}`} >
+          {blog.title} {blog.author}
+        </MuiLink>
+        {/* <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link> */}
       </div>
 
       {username === blog.user.username ? remove() : null}

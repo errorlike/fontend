@@ -1,4 +1,5 @@
 
+import { Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -37,11 +38,11 @@ const App = () => {
 
 
   return (
-    <div>
+    <div >
       {user ?
         <>
-          <Menu user={user}/>
-          <h2>blogApp</h2>
+          <Menu user={user} />
+          <Typography variant='h3' margin={'5px'}>blogApp</Typography>
         </>
         : null}
       <Routes>

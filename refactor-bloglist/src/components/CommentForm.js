@@ -1,3 +1,4 @@
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createComment } from '../reducers/blogReducer';
@@ -15,8 +16,8 @@ const CommentForm = ({ id }) => {
   return (
     <div>
       <form onSubmit={addComment}>
-        <input type="text" onChange={handleCommentChange} />
-        <button type="submit">add comment </button>
+        <TextField size ='small' type="text" onChange={handleCommentChange} />
+        <Button variant='contained' size='small' type="submit">add comment </Button>
       </form>
     </div>
   );

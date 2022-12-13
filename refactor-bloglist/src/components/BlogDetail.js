@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { updateBlog } from '../reducers/blogReducer';
@@ -24,7 +25,7 @@ const BlogDetail = () => {
       <h1>{blog.title} {blog.author}</h1>
       <a href={blog.url}>{blog.url}</a>
       <br />
-      {blog.likes} <button onClick={() => { incrLikeCount(blog); }}>like</button>
+      {blog.likes} <Button variant='outlined' size='small' onClick={() => { incrLikeCount(blog); }}>like</Button>
       <br />
       {blog.author}
       <h2>comments</h2>

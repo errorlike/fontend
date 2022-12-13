@@ -1,3 +1,4 @@
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -32,26 +33,29 @@ const LoginForm = () => {
     <div>
       <form onSubmit={handleLogin}>
         <div>
-          Username
-          <input
+          <TextField
             type='text'
             value={username}
             name='Username'
+            label='Username'
+            margin='normal'
             onChange={handleUsernameChange}
+
           />
         </div>
         <div>
-          Password
-          <input
+          <TextField
             type='password'
             value={password}
             name='Password'
+            margin='normal'
+            label='Password'
             onChange={handlePasswordChange}
           />
         </div>
-        <button type='submit'>
+        <Button size='small' color='primary' variant='contained' type='submit'>
           login
-        </button>
+        </Button >
       </form>
     </div>);
 };
